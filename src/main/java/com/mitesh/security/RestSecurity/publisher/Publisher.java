@@ -1,8 +1,8 @@
-package com.mitesh.security.RestSecurity.model;
+package com.mitesh.security.RestSecurity.publisher;
 
 public class Publisher {
 
-	private String publisherId;
+	private Integer publisherId;
 	private String name;
 	private String emailId;
 	private String phoneNumber;
@@ -10,10 +10,10 @@ public class Publisher {
 	public Publisher() {
 		
 	}
-	public String getPublisherId() {
+	public Integer getPublisherId() {
 		return publisherId;
 	}
-	public void setPublisherId(String publisherId) {
+	public void setPublisherId(Integer publisherId) {
 		this.publisherId = publisherId;
 	}
 	public String getName() {
@@ -34,7 +34,7 @@ public class Publisher {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	public Publisher(String publisherId, String name, String emailId, String phoneNumber) {
+	public Publisher(Integer publisherId, String name, String emailId, String phoneNumber) {
 		super();
 		this.publisherId = publisherId;
 		this.name = name;
