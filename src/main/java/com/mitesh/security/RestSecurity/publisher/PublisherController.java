@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mitesh.security.RestSecurity.exception.ResourceAlreadyExistsException;
+import com.mitesh.security.RestSecurity.exception.ResourceNotFoundException;
 
 @RestController
 @RequestMapping(path = "/v1/publishers")
@@ -21,8 +22,15 @@ public class PublisherController {
 	}
 
 	@GetMapping(path = "/{publisherId}")
-	public Publisher getPublisher(@PathVariable Integer publisherId) {
-		return new Publisher(publisherId, "Mitesh","mitesh@gmail.com", "12346789");
+	public ResponseEntity<?> getPublisher(@PathVariable Integer publisherId) {
+		
+		Publisher publisher=null;
+		try {
+			publisher=publisherService.getPublisher(publisherId);
+		}catch (ResourceNotFoundException e) {
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(publisher,HttpStatus.OK);
 	}
 
 	@PostMapping
