@@ -1,6 +1,10 @@
 package com.mitesh.security.RestSecurity.publisher;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -91,6 +95,26 @@ public class PublisherService {
 		}catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException("Publisher Id "+publisherId+" not found ");
 		}
+	}
+
+
+	public List<Publisher> searchPublisher(String name) {
+
+		List<PublisherEntity> publisherEntities=null;
+		if(PublisherUtils.doesStringValueExists(name)) {
+			publisherEntities=publisherRepository.findByNameContaining(name);
+		}
+		if(publisherEntities!=null && publisherEntities.size()>0) {
+			return createPublisherForSearchResponse(publisherEntities);
+		}else {
+			return Collections.emptyList();
+		}
+	}
+
+
+	private List<Publisher> createPublisherForSearchResponse(List<PublisherEntity> publisherEntities) {
+		return publisherEntities.stream().map(pe->createPublisherFromEntity(pe)).collect(Collectors.toList());
+		
 	}
 
 }
