@@ -3,6 +3,7 @@ package com.mitesh.security.RestSecurity.publisher;
 import java.util.Optional;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.mitesh.security.RestSecurity.exception.ResourceAlreadyExistsException;
@@ -80,6 +81,15 @@ public class PublisherService {
 			publisherToBeUpdated=createPublisherFromEntity(pe);
 		}else {
 			throw new ResourceNotFoundException("Publisher Id "+publisherToBeUpdated.getPublisherId()+" not found");
+		}
+	}
+
+
+	public void deletePublisher(Integer publisherId) throws ResourceNotFoundException {
+		try {
+		publisherRepository.deleteById(publisherId);
+		}catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException("Publisher Id "+publisherId+" not found ");
 		}
 	}
 
