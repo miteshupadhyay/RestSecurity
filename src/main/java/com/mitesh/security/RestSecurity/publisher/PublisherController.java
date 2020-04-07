@@ -1,6 +1,7 @@
 package com.mitesh.security.RestSecurity.publisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,5 +56,15 @@ public class PublisherController {
 		}
 		return new ResponseEntity<>(publisher,HttpStatus.CREATED);
 	}
-
+	@DeleteMapping(path = "/{publisherId}")
+	public ResponseEntity<?> deletePublisher(@PathVariable Integer publisherId) {
+		
+		Publisher publisher=null;
+		try {
+			publisherService.deletePublisher(publisherId);
+		}catch (ResourceNotFoundException e) {
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(publisher,HttpStatus.ACCEPTED);
+	}
 }
