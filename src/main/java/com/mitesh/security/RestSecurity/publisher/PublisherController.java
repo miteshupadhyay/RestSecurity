@@ -1,6 +1,8 @@
 package com.mitesh.security.RestSecurity.publisher;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -59,7 +61,7 @@ public class PublisherController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> addPublisher(@RequestBody Publisher publisher,
+	public ResponseEntity<?> addPublisher(@Valid @RequestBody Publisher publisher,
 			@RequestHeader(value = "Trace-Id",defaultValue = "")String traceId) {
 		
 		if(!PublisherUtils.doesStringValueExists(traceId)) {
