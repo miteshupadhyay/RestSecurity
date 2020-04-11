@@ -6,10 +6,13 @@ import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.mitesh.security.RestSecurity.exception.PublisherControllerExceptionHandler;
 import com.mitesh.security.RestSecurity.exception.ResourceAlreadyExistsException;
 import com.mitesh.security.RestSecurity.exception.ResourceNotFoundException;
 import com.mitesh.security.RestSecurity.utils.PublisherUtils;
@@ -17,6 +20,9 @@ import com.mitesh.security.RestSecurity.utils.PublisherUtils;
 @Service
 public class PublisherService {
 
+	private static Logger logger=LoggerFactory.getLogger(PublisherService.class);
+	
+	
 	private PublisherRepository publisherRepository;
 	
 	
@@ -36,7 +42,7 @@ public class PublisherService {
 		try {
 		addedPublisher=publisherRepository.save(publisherEntity);
 		}catch (DataIntegrityViolationException ex) {
-			throw new ResourceAlreadyExistsException("Trace Id "+traceId+", Publiser is already exists..");
+			throw new ResourceAlreadyExistsException(traceId," Publiser is already exists..");
 		}
 		
 		publisherToBeAdded.setPublisherId(addedPublisher.getPublisherid());
@@ -51,7 +57,7 @@ public class PublisherService {
 				PublisherEntity pe=publisherEntity.get();
 				publisher=createPublisherFromEntity(pe);
 			}else {
-				throw new ResourceNotFoundException("Trace Id "+traceId+", Publisher Id "+publisherId+" not found");
+				throw new ResourceNotFoundException(traceId, "Publisher Id "+publisherId+" not found");
 			}
 			
 			return publisher;
@@ -84,7 +90,7 @@ public class PublisherService {
 			publisherRepository.save(pe);
 			publisherToBeUpdated=createPublisherFromEntity(pe);
 		}else {
-			throw new ResourceNotFoundException("Trace Id "+traceId+", Publisher Id "+publisherToBeUpdated.getPublisherId()+" not found");
+			throw new ResourceNotFoundException(traceId, "Publisher Id "+publisherToBeUpdated.getPublisherId()+" not found");
 		}
 	}
 
@@ -93,7 +99,8 @@ public class PublisherService {
 		try {
 		publisherRepository.deleteById(publisherId);
 		}catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException("Trace Id "+traceId+", Publisher Id "+publisherId+" not found ");
+			logger.error("Trace Id: {}, Publisher Id: {} Not Found",traceId,publisherId,e);
+			throw new ResourceNotFoundException(traceId," Publisher Id "+publisherId+" not found ");
 		}
 	}
 

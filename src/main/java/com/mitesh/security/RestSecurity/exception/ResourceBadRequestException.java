@@ -1,10 +1,10 @@
 package com.mitesh.security.RestSecurity.exception;
 
-public class ResourceAlreadyExistsException extends Exception {
+public class ResourceBadRequestException extends Exception {
 
-	String traceId;
+String traceId;
 	
-	public ResourceAlreadyExistsException(String traceId,String message) {
+	public ResourceBadRequestException(String traceId,String message) {
 		super(message);
 		this.traceId=traceId;
 	}
@@ -13,5 +13,4 @@ public class ResourceAlreadyExistsException extends Exception {
 		return traceId;
 	}
 	
-
 }
