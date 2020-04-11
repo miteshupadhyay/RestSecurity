@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mitesh.security.RestSecurity.exception.ResourceAlreadyExistsException;
 import com.mitesh.security.RestSecurity.exception.ResourceBadRequestException;
 import com.mitesh.security.RestSecurity.exception.ResourceNotFoundException;
-import com.mitesh.security.RestSecurity.utils.PublisherUtils;
+import com.mitesh.security.RestSecurity.utils.LibraryUtils;
 
 @RestController
 @RequestMapping(path = "/v1/publishers")
@@ -34,7 +34,7 @@ public class PublisherController {
 	@GetMapping(path = "/{publisherId}")
 	public ResponseEntity<?> getPublisher(@PathVariable Integer publisherId,
 			@RequestHeader(value = "Trace-Id",defaultValue = "")String traceId) throws ResourceNotFoundException {
-		if(!PublisherUtils.doesStringValueExists(traceId)) {
+		if(!LibraryUtils.doesStringValueExists(traceId)) {
 			traceId=UUID.randomUUID().toString();
 		}
 		Publisher publisher=null;
@@ -46,7 +46,7 @@ public class PublisherController {
 	@PutMapping(path = "/{publisherId}")
 	public ResponseEntity<?> updatePublisher(@PathVariable Integer publisherId,@RequestBody Publisher publisher,
 			@RequestHeader(value = "Trace-Id",defaultValue = "")String traceId) throws ResourceNotFoundException {
-		if(!PublisherUtils.doesStringValueExists(traceId)) {
+		if(!LibraryUtils.doesStringValueExists(traceId)) {
 			traceId=UUID.randomUUID().toString();
 		}
 			publisher.setPublisherId(publisherId);
@@ -59,7 +59,7 @@ public class PublisherController {
 	public ResponseEntity<?> addPublisher(@Valid @RequestBody Publisher publisher,
 			@RequestHeader(value = "Trace-Id",defaultValue = "")String traceId) throws ResourceAlreadyExistsException {
 		
-		if(!PublisherUtils.doesStringValueExists(traceId)) {
+		if(!LibraryUtils.doesStringValueExists(traceId)) {
 			traceId=UUID.randomUUID().toString();
 		}
 		
@@ -71,7 +71,7 @@ public class PublisherController {
 	public ResponseEntity<?> deletePublisher(@PathVariable Integer publisherId,
 			@RequestHeader(value = "Trace-Id",defaultValue = "")String traceId) throws ResourceNotFoundException {
 		
-		if(!PublisherUtils.doesStringValueExists(traceId)) {
+		if(!LibraryUtils.doesStringValueExists(traceId)) {
 			traceId=UUID.randomUUID().toString();
 		}
 		Publisher publisher=null;
@@ -82,10 +82,10 @@ public class PublisherController {
 	public ResponseEntity<?> getPublisher(@RequestParam String name,
 			@RequestHeader(value = "Trace-Id",defaultValue = "")String traceId) throws ResourceBadRequestException {
 		
-		if(!PublisherUtils.doesStringValueExists(traceId)) {
+		if(!LibraryUtils.doesStringValueExists(traceId)) {
 			traceId=UUID.randomUUID().toString();
 		}
-		if(!PublisherUtils.doesStringValueExists(name)) {
+		if(!LibraryUtils.doesStringValueExists(name)) {
 			throw new ResourceBadRequestException(traceId, "Please enter a name to search publisher ");
 		}
 		return new ResponseEntity<>(publisherService.searchPublisher(name,traceId),HttpStatus.OK);

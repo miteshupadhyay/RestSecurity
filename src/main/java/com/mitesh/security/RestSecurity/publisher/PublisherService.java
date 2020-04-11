@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.mitesh.security.RestSecurity.exception.ResourceAlreadyExistsException;
 import com.mitesh.security.RestSecurity.exception.ResourceNotFoundException;
-import com.mitesh.security.RestSecurity.utils.PublisherUtils;
+import com.mitesh.security.RestSecurity.utils.LibraryUtils;
 
 @Service
 public class PublisherService {
@@ -74,15 +74,15 @@ public class PublisherService {
 		if(publisherEntity.isPresent()) {
 			PublisherEntity pe=publisherEntity.get();
 			
-			if(PublisherUtils.doesStringValueExists(publisherToBeUpdated.getEmailId())) {
+			if(LibraryUtils.doesStringValueExists(publisherToBeUpdated.getEmailId())) {
 				pe.setEmailId(publisherToBeUpdated.getEmailId());
 			}
 
-			if(PublisherUtils.doesStringValueExists(publisherToBeUpdated.getPhoneNumber())) {
+			if(LibraryUtils.doesStringValueExists(publisherToBeUpdated.getPhoneNumber())) {
 				pe.setPhoneNumber(publisherToBeUpdated.getPhoneNumber());
 			}
 			
-			if(PublisherUtils.doesStringValueExists(publisherToBeUpdated.getName())) {
+			if(LibraryUtils.doesStringValueExists(publisherToBeUpdated.getName())) {
 				pe.setName(publisherToBeUpdated.getName());
 			}
 			publisherRepository.save(pe);
@@ -106,7 +106,7 @@ public class PublisherService {
 	public List<Publisher> searchPublisher(String name,String traceId) {
 
 		List<PublisherEntity> publisherEntities=null;
-		if(PublisherUtils.doesStringValueExists(name)) {
+		if(LibraryUtils.doesStringValueExists(name)) {
 			publisherEntities=publisherRepository.findByNameContaining(name);
 		}
 		if(publisherEntities!=null && publisherEntities.size()>0) {

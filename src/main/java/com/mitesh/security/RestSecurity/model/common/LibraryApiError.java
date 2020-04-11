@@ -1,6 +1,6 @@
 package com.mitesh.security.RestSecurity.model.common;
 
-public class PublisherApiError {
+public class LibraryApiError {
 
 	private String traceId;
 	private String errorMessage;
@@ -17,10 +17,10 @@ public class PublisherApiError {
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
-	public PublisherApiError() {
+	public LibraryApiError() {
 		
 	}
-	public PublisherApiError(String traceId, String errorMessage) {
+	public LibraryApiError(String traceId, String errorMessage) {
 		super();
 		this.traceId = traceId;
 		this.errorMessage = errorMessage;
