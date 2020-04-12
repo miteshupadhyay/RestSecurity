@@ -1,4 +1,5 @@
 package com.mitesh.security.RestSecurity.author;
+
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -28,103 +29,99 @@ import com.mitesh.security.RestSecurity.utils.LibraryUtils;
 @RequestMapping(path = "/v1/authors")
 public class AuthorController {
 
-    private static Logger logger = LoggerFactory.getLogger(AuthorController.class);
-
-    private AuthorService authorService;
-
-    public AuthorController(AuthorService authorService) {
-        this.authorService = authorService;
-    }
-
-    @GetMapping(path = "/{authorId}")
-    public ResponseEntity<?> getAuthor(@PathVariable Integer authorId,
-                                          @RequestHeader(value = "Trace-Id", defaultValue = "") String traceId)
-            throws ResourceNotFoundException {
-
-        if(!LibraryUtils.doesStringValueExists(traceId)) {
-            traceId = UUID.randomUUID().toString();
-        }
-        logger.debug("Added TraceId: {}", traceId);
-        return new ResponseEntity<>(authorService.getAuthor(authorId, traceId), HttpStatus.OK);
-    }
-
-    @PostMapping
-    public ResponseEntity<?> addAuthor(@Valid @RequestBody Author author,
-                                          @RequestHeader(value = "Trace-Id", defaultValue = "") String traceId,
-                                          @RequestHeader(value = "Authorization") String bearerToken)
-            throws ResourceAlreadyExistsException, ResourceUnauthorizedException {
-
-        logger.debug("Request to add Author: {}", author);
-        if(!LibraryUtils.doesStringValueExists(traceId)) {
-            traceId = UUID.randomUUID().toString();
-        }
-        logger.debug("Added TraceId: {}", traceId);
-        if(!LibraryUtils.isUserAdmin(bearerToken)) {
-            logger.error(LibraryUtils.getUserIdFromClaim(bearerToken) + " attempted to add a Author. Disallowed because user is not Admin");
-            throw new ResourceUnauthorizedException(traceId, "User not allowed to Add a Author");
-        }
-        authorService.addAuthor(author, traceId);
-
-        logger.debug("Returning response for TraceId: {}", traceId);
-        return new ResponseEntity<>(author, HttpStatus.CREATED);
-    }
-
-    @PutMapping(path = "/{authorId}")
-    public ResponseEntity<?> updateAuthor(@PathVariable Integer authorId,
-                                          @Valid @RequestBody Author author,
-                                          @RequestHeader(value = "Trace-Id", defaultValue = "") String traceId,
-                                          @RequestHeader(value = "Authorization") String bearerToken)
-            throws ResourceNotFoundException, ResourceUnauthorizedException {
-
-        if(!LibraryUtils.doesStringValueExists(traceId)) {
-            traceId = UUID.randomUUID().toString();
-        }
-        logger.debug("Added TraceId: {}", traceId);
-        if(!LibraryUtils.isUserAdmin(bearerToken)) {
-            logger.error(LibraryUtils.getUserIdFromClaim(bearerToken) + " attempted to update a Author. Disallowed because user is not Admin");
-            throw new ResourceUnauthorizedException(traceId, "User not allowed to Add a Author");
-        }
-
-        author.setAuthorId(authorId);
-        authorService.updateAuthor(author, traceId);
-        logger.debug("Returning response for TraceId: {}", traceId);
-        return new ResponseEntity<>(author, HttpStatus.OK);
-    }
-
-    @DeleteMapping(path = "/{authorId}")
-    public ResponseEntity<?> deleteAuthor(@PathVariable Integer authorId,
-                                          @RequestHeader(value = "Trace-Id", defaultValue = "") String traceId,
-                                          @RequestHeader(value = "Authorization") String bearerToken)
-            throws ResourceNotFoundException, ResourceUnauthorizedException {
-
-        if(!LibraryUtils.doesStringValueExists(traceId)) {
-            traceId = UUID.randomUUID().toString();
-        }
-        if(!LibraryUtils.isUserAdmin(bearerToken)) {
-            logger.error(LibraryUtils.getUserIdFromClaim(bearerToken) + " attempted to delete a Author. Disallowed because user is not Admin");
-            throw new ResourceUnauthorizedException(traceId, "User not allowed to Add a Author");
-        }
-        logger.debug("Added TraceId: {}", traceId);
-        authorService.deleteAuthor(authorId, traceId);
-        logger.debug("Returning response for TraceId: {}", traceId);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
-    }
-
-    @GetMapping(path = "/search")
-    public ResponseEntity<?> searchAuthor(@RequestParam String firstName, @RequestParam String lastName,
-                                          @RequestHeader(value = "Trace-Id", defaultValue = "") String traceId)
-            throws ResourceBadRequestException
-    {
-
-        if(!LibraryUtils.doesStringValueExists(traceId)) {
-            traceId = UUID.randomUUID().toString();
-        }
-        logger.debug("Added TraceId: {}", traceId);
-        if(!LibraryUtils.doesStringValueExists(firstName) && !LibraryUtils.doesStringValueExists(lastName)) {
+	private static Logger logger=LoggerFactory.getLogger(AuthorController.class);
+	
+	private AuthorService authorService;
+	
+	public AuthorController(AuthorService authorService) {
+		this.authorService=authorService;
+	}
+	
+	@GetMapping(path = "/{authorId}")
+	public ResponseEntity<?> getAuthor(@PathVariable Integer authorId,@RequestHeader(value = "Trace-Id",defaultValue = "") String traceId)
+					throws ResourceNotFoundException
+	{
+		
+		if(!LibraryUtils.doesStringValueExists(traceId)) {
+			traceId=UUID.randomUUID().toString();
+		}
+		
+		logger.debug("Added Trace Id: {}",traceId);	
+		
+		return new ResponseEntity<>(authorService.getAuthor(authorId,traceId),HttpStatus.OK);
+	}
+	
+	@PostMapping
+	public ResponseEntity<?> addAuthor(@Valid @RequestBody Author author,
+							@RequestHeader (value = "Trace-Id",defaultValue = "")String traceId) 
+									throws ResourceAlreadyExistsException,ResourceUnauthorizedException
+	{
+		logger.debug("Request to add author: {}",author);
+		
+		if(!LibraryUtils.doesStringValueExists(traceId)) {
+			traceId=UUID.randomUUID().toString();
+		}
+		logger.debug("Added Trace Id: {}",traceId);		
+		
+		authorService.addAuthor(author,traceId);
+		
+		logger.debug("Returning Response for Trace-Id:{}",traceId);
+		return new ResponseEntity<>(author,HttpStatus.CREATED);		
+	}
+	
+	@PutMapping(path = "/{authorId}")
+	public ResponseEntity<?> updateAuthor(@PathVariable Integer authorId,
+										@Valid @RequestBody Author author,
+										@RequestHeader(value = "Trace-Id",defaultValue = "") String traceId) throws ResourceNotFoundException
+	{
+		
+		if(!LibraryUtils.doesStringValueExists(traceId)) {
+			traceId=UUID.randomUUID().toString();
+		}
+		logger.debug("Added Trace Id: {}",traceId);	
+		
+		author.setAuthorId(authorId);
+		authorService.updateAuthor(author,traceId);
+		logger.debug("Returning Response for TraceId: {}",traceId);
+		return new ResponseEntity<>(author,HttpStatus.OK);
+		
+	}
+	
+	
+	
+	@DeleteMapping(path = "/{authorId}")
+	public ResponseEntity<?> deleteAuthor(@PathVariable Integer authorId,
+			@RequestHeader(value = "Trace-Id",defaultValue = "") String traceId) throws ResourceNotFoundException
+	{
+		if(!LibraryUtils.doesStringValueExists(traceId)) {
+			traceId=UUID.randomUUID().toString();
+		}
+		logger.debug("Added Trace Id: {}",traceId);	
+		
+		authorService.deleteAuthor(authorId,traceId);
+		logger.debug("Returning Response for TraceId: {}",traceId);
+		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	}
+	
+	
+	@GetMapping(path = "/search")
+	public ResponseEntity<?> searchAuthor(@RequestParam String firstName,@RequestParam String lastName,
+								@RequestHeader(value = "Trace-Id",defaultValue = "")String traceId) throws ResourceBadRequestException{
+		
+		if(!LibraryUtils.doesStringValueExists(traceId)) {
+			traceId=UUID.randomUUID().toString();
+		}
+		logger.debug("Added Trace Id: {}",traceId);	
+		
+		if(!LibraryUtils.doesStringValueExists(firstName) && !LibraryUtils.doesStringValueExists(lastName)) {
             logger.error("TraceId: {}, Please enter at least one search criteria to search Authors!!", traceId);
             throw new ResourceBadRequestException(traceId, "Please enter a name to search Author.");
         }
-        logger.debug("Returning response for TraceId: {}", traceId);
+		logger.debug("Returning response for TraceId: {}", traceId);
         return new ResponseEntity<>(authorService.searchAuthor(firstName, lastName, traceId), HttpStatus.OK);
-    }
+    
+	}
+	
+	
+	
 }

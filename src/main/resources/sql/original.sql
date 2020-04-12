@@ -72,7 +72,7 @@ INSERT INTO USER_BOOK_SEQUENCE (User_Book_Id, next_val) VALUES (1,2);
 
 CREATE TABLE AUTHOR (
       Author_Id	 INT PRIMARY KEY,
-			First_Name VARCHAR(50) NOT NULL,
+			First_Name VARCHAR(50) NOT NULL UNIQUE,
 			Last_Name VARCHAR(50) NOT NULL,
 			Date_Of_Birth DATE  NOT NULL,
 			Gender ENUM('Male', 'Female', 'Undisclosed') NOT NULL
