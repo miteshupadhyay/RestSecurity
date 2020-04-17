@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mitesh.security.RestSecurity.exception.ResourceAlreadyExistsException;
@@ -22,9 +23,11 @@ public class UserService {
 	private static Logger logger = LoggerFactory.getLogger(UserService.class);
 	
 	private UserRepository userRepository;
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository,BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.userRepository = userRepository;
+		this.bCryptPasswordEncoder=bCryptPasswordEncoder;
 	}
 
 	public void addUser(User userToBeAdded,String traceId) throws ResourceAlreadyExistsException{
@@ -33,7 +36,7 @@ public class UserService {
 		
 		UserEntity userEntity=new UserEntity(
 											userToBeAdded.getUsername(),				
-											SecurityConstants.NEW_USER_DEFAULT_PASSWORD,
+											bCryptPasswordEncoder.encode(SecurityConstants.NEW_USER_DEFAULT_PASSWORD),
 											userToBeAdded.getFirstName(),
 											userToBeAdded.getLastName(), 
 											userToBeAdded.getDateOfBirth(),
@@ -127,6 +130,20 @@ public class UserService {
 	    }
 	 private User createUserFromEntity(UserEntity ue) {
 	        return new User(ue.getUserId(), ue.getUsername(), ue.getFirstName(), ue.getLastName(),
+	                ue.getDateOfBirth(), ue.getGender(), ue.getPhoneNumber(), ue.getEmailId(), Role.valueOf(ue.getRole()));
+	    }
+
+	public User getUserByUsername(String username) throws ResourceNotFoundException {
+		UserEntity userEntity=userRepository.findByUsername(username);
+		if(userEntity!=null) {
+			return createUserFromEntityForLogin(userEntity);
+		}else
+		{
+			throw new ResourceNotFoundException(null, "User not found for the Username "+username);	
+		}		
+	}
+	 private User createUserFromEntityForLogin(UserEntity ue) {
+	        return new User(ue.getUserId(), ue.getUsername(), ue.getPassword(),ue.getFirstName(), ue.getLastName(),
 	                ue.getDateOfBirth(), ue.getGender(), ue.getPhoneNumber(), ue.getEmailId(), Role.valueOf(ue.getRole()));
 	    }
 }
