@@ -24,9 +24,9 @@ import com.mitesh.security.RestSecurity.user.User;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
-	
-	private static Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
+    private static Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
     private AuthenticationManager authenticationManager;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {

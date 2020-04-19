@@ -11,7 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class RestSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserDetailsServiceImpl userDetailsService;
+	private UserDetailsServiceImpl userDetailsService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public RestSecurityConfig(UserDetailsServiceImpl userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -24,6 +24,8 @@ public class RestSecurityConfig extends WebSecurityConfigurerAdapter {
             httpSecurity.cors().and().csrf().disable().authorizeRequests()
                     .antMatchers(HttpMethod.POST, SecurityConstants.NEW_USER_REGISTRATION_URL).permitAll()
                     .antMatchers(HttpMethod.GET, "/v1/users/search").permitAll()
+                    .antMatchers(HttpMethod.GET, "/v1/books/search").permitAll()
+                    .anyRequest().authenticated()
                     .and()
                     .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                     .addFilter(new JwtAuthorizationFilter(authenticationManager()))
